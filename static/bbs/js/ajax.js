@@ -1,4 +1,3 @@
-//Ajax実行前にセッションIDを送信するスクリプト
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -11,7 +10,7 @@ function getCookie(name) {
                 break;
             }
         }
-    }   
+    }
     return cookieValue;
 }
 var csrftoken = getCookie('csrftoken');
@@ -24,7 +23,6 @@ $.ajaxSetup({
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
-    }   
+    }
 });
-
 

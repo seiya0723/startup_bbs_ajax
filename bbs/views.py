@@ -1,39 +1,40 @@
-from django.shortcuts import render,redirect
-
+from django.shortcuts import render
 from django.views import View
-from .models import Topic
 
-import json 
 from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 
-class BbsView(View):
+from .models import Topic
+from .forms import TopicForm
+
+class IndexView(View):
 
     def get(self, request, *args, **kwargs):
 
-        data    = Topic.objects.all()
-        context = { "data":data }
+        context             = {}
+        context["topics"]   = Topic.objects.all()
 
         return render(request,"bbs/index.html",context)
 
     def post(self, request, *args, **kwargs):
 
-        request_post    = json.loads(request.body.decode("utf-8"))
+        json    = { "error":True }
+        form    = TopicForm(request.POST)
 
-        if "comment" in request_post:
+        if not form.is_valid():
+            print("Validation Error")
+            return JsonResponse(json)
 
-            posted  = Topic( comment = request_post["comment"] )
-            posted.save()
+        form.save()
+        json["error"]   = False
 
-            data    = Topic.objects.all()
-            context = { "data":data }
+        context             = {}
+        context["topics"]   = Topic.objects.all()
 
-            content_data_string     = render_to_string('bbs/comment.html', context ,request)
-            json_data               = { "content" : content_data_string }
+        json["content"]     = render_to_string("bbs/content.html",context,request)
 
-            return JsonResponse(json_data)
 
-        return redirect("bbs:index")
 
-index   = BbsView.as_view()
+        return JsonResponse(json)
 
+index   = IndexView.as_view()

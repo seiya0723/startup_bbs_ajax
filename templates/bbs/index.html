@@ -10,22 +10,19 @@
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="{% static 'bbs/js/ajax.js' %}"></script>
-    <script src="{% static 'bbs/js/onload.js' %}"></script>
+    <script src="{% static 'bbs/js/script.js' %}"></script>
 </head>
 <body>
 
     <main class="container">
-        <form>
+        <form id="form_area" action="" method="POST">
             {% csrf_token %}
-            <textarea id="comment" class="form-control" name="comment"></textarea>
+            <textarea id="textarea" class="form-control" name="comment"></textarea>
             <input id="submit" type="button" value="送信">
         </form>
 
-        <div id="comment_area">
-            {% include "bbs/comment.html" %}
-        </div>
-
+        <div id="content_area">{% include "bbs/content.html" %}</div>
     </main>
+
 </body>
 </html>
-
